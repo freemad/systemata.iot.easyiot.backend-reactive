@@ -7,7 +7,7 @@
         <artifactId>easyiot</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>systemata.iot.eiot.easyiot</groupId>
+    <groupId>systemata.iot.eiot</groupId>
     <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
