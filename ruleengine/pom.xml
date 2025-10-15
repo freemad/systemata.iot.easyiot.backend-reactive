@@ -6,8 +6,9 @@
         <groupId>systemata.iot.eiot</groupId>
         <artifactId>easyiot</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>systemata.iot.eiot</groupId>
+    <groupId>systemata.iot.eiot.easyiot</groupId>
     <artifactId>ruleengine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>SYSTEMATA :: EIOT :: RULE-ENGINE</name>
@@ -32,7 +33,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>systemata.iot.eiot</groupId>
+            <groupId>systemata.iot.eiot.easyiot</groupId>
             <artifactId>common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -42,8 +43,13 @@
         <finalName>eiot-ruleengine</finalName>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

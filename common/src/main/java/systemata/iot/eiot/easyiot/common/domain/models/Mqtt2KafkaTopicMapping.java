@@ -9,14 +9,11 @@ import java.util.regex.Pattern;
 public class Mqtt2KafkaTopicMapping {
     private String mqttTopic;     // raw from config, e.g. "devices/+/telemetry"
     private String kafkaTopic;
-    private Pattern mqttTopicPattern;
 
-    @PostConstruct
-    public void init() {
-        // Convert MQTT wildcards (+, #) into regex for matching
+    public Pattern getMqttTopicPattern() {
         String regex = mqttTopic
                 .replace("+", "[^/]+")   // + → one segment
                 .replace("#", ".+");     // # → all remaining
-        this.mqttTopicPattern = Pattern.compile(regex);
+        return Pattern.compile(regex);
     }
 }

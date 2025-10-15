@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import systemata.iot.eiot.easyiot.common.contracts.services.IModel2DtoMonoMapper;
 import systemata.iot.eiot.easyiot.core.domain.dtos.DeviceAndGatesDtoV1;
-import systemata.iot.eiot.easyiot.common.domain.entityservices.GateEntityService;
+import systemata.iot.eiot.easyiot.core.domain.entityservices.GateEntityService;
 import systemata.iot.eiot.easyiot.core.domain.models.Device;
 
 import java.util.UUID;

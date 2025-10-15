@@ -10,9 +10,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
-import systemata.iot.eiot.easyiot.common.configs.CommonProps;
 import systemata.iot.eiot.easyiot.common.domain.models.Mqtt2KafkaTopicMapping;
 import systemata.iot.eiot.easyiot.common.domain.models.MqttMessageEnvelope;
+import systemata.iot.eiot.easyiot.edgemqtt.configs.MqttProps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +23,14 @@ import java.util.List;
 public class Mqtt2KafkaBridgeService {
 
     private final MqttService mqttService;
-    private final CommonProps commonProps;
+    private final MqttProps mqttProps;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private final List<Disposable> subscriptions = new ArrayList<>();
 
     @PostConstruct
     public void start() throws MqttException {
-        List<Mqtt2KafkaTopicMapping> mappings = commonProps.getMqttKafkaBridge().getMqtt2KafkaTopicMappings();
+        List<Mqtt2KafkaTopicMapping> mappings = mqttProps.getMqttKafkaBridge().getTopicMappings();
 
         for (Mqtt2KafkaTopicMapping mapping : mappings) {
             String mqttTopic = mapping.getMqttTopic();   // e.g. "devices/+/telemetry"

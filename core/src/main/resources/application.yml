@@ -1,1 +1,41 @@
-spring.application.name=core
+server:
+  port: 8080
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+#  jackson:
+#    property-naming-strategy: KEBAB_CASE
+  application:
+    name: systemata-eiot-core
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/eiot_core_db
+    username: postgres
+    password: postgres
+  #  data:
+  #    mongodb:
+  #      uri: mongodb://localhost:27017/eiot_nsdb
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    admin:
+      auto-create: true
+    consumer:
+      group-id: eiot-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+application:
+  common:
+    kafka-config:
+      consumer-groups:
+        - topic: iot.telemetry
+

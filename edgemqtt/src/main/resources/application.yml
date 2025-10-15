@@ -1,1 +1,38 @@
-spring.application.name=edgemqtt
+server:
+  port: 8091
+
+spring:
+  application:
+    name: edge-mqtt
+
+application:
+  mqtt-config:
+    connection-props:
+      broker: ${MQTT_BROKER_URL:tcp://localhost:1883}
+      client-id: ${MQTT_CLIENT_ID:eiot-client}
+      default-qos: ${MQTT_DEFAULT_QOS:1}
+      auto-reconnect: ${MQTT_AUTO_RECONNECT:true}
+      clean-session: ${MQTT_CLEAN_SESSION:true}
+      keep-alive-interval: ${MQTT_KEEP_ALIVE_INTERVAL:10}
+      connection-timeout: ${MQTT_CONNECTION_TIMEOUT:20}
+      reconnect-interval:
+      reconnect-attempts:
+      username:
+      password:
+      topics:
+        - ${MQTT_TOPIC_TELEMETRY:devices/+/telemetry}
+        - ${MQTT_TOPIC_COMMAND:devices/+/command}
+        - ${MQTT_TOPIC_CONTROL:devices/+/control}
+    stream-props:
+      auto-cancel: ${MQTT_STREAM_AUTO_CANCEL:false}
+      buffer-size: ${MQTT_STREAM_BUFFER_SIZE:10000}
+      timeout-in-min: ${MQTT_STREAM_TIMEOUT_IN_MIN:30}
+    mqtt-kafka-bridge:
+      topic-mappings:
+        - mqtt-topic: ${MQTT_TOPIC_TELEMETRY:devices/+/telemetry}
+          kafka-topic: ${KAFKA_TOPIC_TELEMETRY:iot.telemetry}
+        - mqtt-topic: ${MQTT_TOPIC_COMMAND:devices/+/command}
+          kafka-topic: ${KAFKA_TOPIC_COMMAND:iot.command}
+        - mqtt-topic: ${MQTT_TOPIC_CONTROL:devices/+/control}
+          kafka-topic: ${KAFKA_TOPIC_CONTROL:iot.control}
+

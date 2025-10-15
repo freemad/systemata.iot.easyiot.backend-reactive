@@ -1,1 +1,189 @@
 services:
+
+  timescaledb:
+    container_name: eiot-core-timescaledb
+    image: "timescale/timescaledb:2.21.3-pg17"
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: eiot_core_db
+      PGDATA: /pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./volumes/timescaledb:/pgdata"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    hostname: eiot-core-timescaledb
+    networks:
+      eiot:
+        ipv4_address: 10.1.1.15
+
+  mqtt-server:
+    container_name: eiot-core-mqtt-server
+    image: "eclipse-mosquitto:2.0.22"
+    restart: unless-stopped
+    environment:
+      - PUID=3002
+      - PGID=3002
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - "./volumes/mosquitto/config:/mosquitto/config:rw"
+      - "./volumes/mosquitto/data:/mosquitto/data:rw"
+      - "./volumes/mosquitto/log:/mosquitto/log:rw"
+    hostname: eiot-mqtt-server
+    networks:
+      eiot:
+        ipv4_address: 10.1.1.17
+
+#  zookeeper:
+#    container_name: eiot-zookeeper
+#    image: "confluentinc/cp-zookeeper:7.4.10"
+#    environment:
+#      ZOOKEEPER_SERVER_ID: 1
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#      ZOOKEEPER_TICK_TIME: 2000
+#      ZOOKEEPER_SERVERS: zookeeper:2888:3888
+#      ALLOW_ANONYMOUS_LOGIN: yes
+#    hostname: eiot-zookeeper
+#    networks:
+#      eiot:
+#        ipv4_address: 10.1.1.11
+
+  # --- Kafka Broker 1 ---
+  kafka-1:
+    image: apache/kafka:4.1.0
+    container_name: eiot-kafka-1
+    hostname: eiot-kafka-1
+    ports:
+      - "9092:9092"  # External access
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:19092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://eiot-kafka-1:19092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@eiot-kafka-1:9093,2@eiot-kafka-2:9093,3@eiot-kafka-3:9093
+      CLUSTER_ID: 'systemataEIoTKafkaClusterId' # EmptNWtoR4GGWx-BH6nGLQ
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - ./volumes/kafka-1:/var/lib/kafka/data
+    networks:
+      eiot:
+        ipv4_address: 10.1.1.11
+
+  # --- Kafka Broker 2 ---
+  kafka-2:
+    image: apache/kafka:4.1.0
+    container_name: eiot-kafka-2
+    hostname: eiot-kafka-2
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:19094,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://eiot-kafka-2:19094,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@eiot-kafka-1:9093,2@eiot-kafka-2:9093,3@eiot-kafka-3:9093
+      CLUSTER_ID: 'systemataEIoTKafkaClusterId'
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - ./volumes/kafka-2:/var/lib/kafka/data
+    networks:
+      eiot:
+        ipv4_address: 10.1.1.12
+
+  # --- Kafka Broker 3 ---
+  kafka-3:
+    image: apache/kafka:4.1.0
+    container_name: eiot-kafka-3
+    hostname: eiot-kafka-3
+    ports:
+      - "9096:9096"
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:19096,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9096
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://eiot-kafka-3:19096,EXTERNAL://localhost:9096
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@eiot-kafka-1:9093,2@eiot-kafka-2:9093,3@eiot-kafka-3:9093
+      CLUSTER_ID: 'systemataEIoTKafkaClusterId'
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - ./volumes/kafka-3:/var/lib/kafka/data
+    networks:
+      eiot:
+        ipv4_address: 10.1.1.13
+
+  kafka-ui:
+    container_name: eiot-kafka-ui
+    image: "provectuslabs/kafka-ui:v0.7.2"
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    ports:
+      - "7777:8080"
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_0_NAME: eiot
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: eiot-kafka-1:19092,eiot-kafka-2:19094,eiot-kafka-3:19096
+#      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    hostname: eiot-kafka-ui
+    networks:
+      eiot:
+        ipv4_address: 10.1.1.31
+
+networks:
+  eiot:
+    name: eiot
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.1.0/24
+          gateway: 10.1.1.1
+
+  #  mongodb:
+  #    image: 'mongo:latest'
+  #    environment:
+  #      - 'MONGO_INITDB_DATABASE=mydatabase'
+  #      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
+  #      - 'MONGO_INITDB_ROOT_USERNAME=root'
+  #    ports:
+  #      - '27017'
+  #
+
+#  core-postgres:
+#    container_name: eiot-core-postgres
+#    image: postgres:15.13-alpine3.20
+#    restart: on-failure
+#    environment:
+#      #      PGUSER: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: eiot_core_db
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - "./volumes/postgres:/var/lib/postgresql/data"
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#    networks:
+#      eiot:
+#        ipv4_address: 10.1.1.25

@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import systemata.iot.eiot.core.domain.entityservices.*;
 import systemata.iot.eiot.easyiot.core.domain.entityservices.*;
+import systemata.iot.eiot.easyiot.core.domain.models.*;
 
 import java.util.UUID;
 
