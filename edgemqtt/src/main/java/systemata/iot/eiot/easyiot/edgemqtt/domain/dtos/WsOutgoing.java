@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IDto;
+import systemata.iot.eiot.easyiot.edgemqtt.domain.enums.WsMsgType;
 
 import java.io.Serial;
 import java.time.Instant;
@@ -18,7 +19,7 @@ public class WsOutgoing
     private final String type = "ws-outgoing";
     private final String version = "1";
 
-    private String msgType = "mqtt-message"; // or "ack", "error"
+    private WsMsgType msgType = WsMsgType.WS_MSG_TYPE_MQTT_MSG;
     private String topic;
     private String payload;
     private int qos;

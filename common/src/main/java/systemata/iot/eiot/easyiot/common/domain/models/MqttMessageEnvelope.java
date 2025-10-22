@@ -3,6 +3,7 @@ package systemata.iot.eiot.easyiot.common.domain.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IModel;
 
 import java.io.Serial;
@@ -10,6 +11,7 @@ import java.time.Instant;
 import java.util.Map;
 
 @Data
+@Accessors(chain = true)
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class MqttMessageEnvelope

@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: edge-mqtt
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:10.1.1.11:9092,10.1.1.12:9092,10.1.1.13:9092}
+    group-id: eiot-websocket-${random.uuid}   # will be overridden by bean if needed
+    client-id: ${spring.application.name}-${spring.application.instance_id:${random.uuid}}
 
 application:
   mqtt-config:
@@ -35,4 +39,8 @@ application:
           kafka-topic: ${KAFKA_TOPIC_COMMAND:iot.command}
         - mqtt-topic: ${MQTT_TOPIC_CONTROL:devices/+/control}
           kafka-topic: ${KAFKA_TOPIC_CONTROL:iot.control}
+    ws-props:
+      buffer-size: ${WS_STREAM_BUFFER_SIZE:10000}
+      timeout-in-min: ${WS_STREAM_TIMEOUT_IN_MIN:30}
+
 

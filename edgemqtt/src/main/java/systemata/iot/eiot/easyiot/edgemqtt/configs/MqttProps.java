@@ -13,6 +13,7 @@ public class MqttProps {
     private final ConnectionProps connectionProps =  new ConnectionProps();
     private final StreamProps streamProps = new StreamProps();
     private final MqttKafkaBridge mqttKafkaBridge = new MqttKafkaBridge();
+    private final WsProps wsProps = new WsProps();
 
     @Data
     public static class ConnectionProps {
@@ -39,7 +40,13 @@ public class MqttProps {
 
     @Data
     public static class MqttKafkaBridge {
+
         private List<Mqtt2KafkaTopicMapping> topicMappings;
     }
 
+    @Data
+    public static class WsProps {
+        private Integer bufferSize;
+        private Integer timeoutInMin;
+    }
 }
