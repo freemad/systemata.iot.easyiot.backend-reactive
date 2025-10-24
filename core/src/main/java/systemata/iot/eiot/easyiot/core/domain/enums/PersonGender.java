@@ -3,13 +3,15 @@ package systemata.iot.eiot.easyiot.core.domain.enums;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import systemata.iot.eiot.easyiot.common.contracts.domain.IByteStrEnum;
 
 import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum PersonGender {
+public enum PersonGender
+        implements IByteStrEnum {
 
     PERSON_GENDER_UNSPECIFIED((byte) 0, "unspecified"),
     PERSON_GENDER_MALE((byte) 1, "male"),
@@ -22,13 +24,13 @@ public enum PersonGender {
 
     public static PersonGender ofValue(final byte value) {
         return Arrays.stream(PersonGender.values())
-                .filter(status -> status.getValue() == value)
+                .filter(enm -> enm.getValue() == value)
                 .findFirst().orElse(PERSON_GENDER_ERROR);
     }
 
     public static PersonGender ofStr(final String str) {
         return Arrays.stream(PersonGender.values())
-                .filter(status -> status.getStr().equals(str))
+                .filter(enm -> enm.getStr().equals(str))
                 .findFirst().orElse(PERSON_GENDER_ERROR);
     }
 }

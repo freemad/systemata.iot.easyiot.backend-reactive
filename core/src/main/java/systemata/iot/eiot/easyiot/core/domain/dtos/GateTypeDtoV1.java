@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.boot.jackson.JsonComponent;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IDto;
+import systemata.iot.eiot.easyiot.core.domain.enums.ProtocolType;
 
 import java.io.Serial;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class GateTypeDtoV1
     private String name;
     private Boolean isInput;
     private Boolean isExtended;
+    private ProtocolType protocolType;
     private Double maxValue;
     private Double baseValue;
     private Short pinCount;

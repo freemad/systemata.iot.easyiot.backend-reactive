@@ -24,6 +24,7 @@ public class GateTypeEntity
     private String name;
     private Boolean isInput;
     private Boolean isExtended;
+    private Byte protocolType;
     private Double maxValue;
     private Double baseValue;
     private Short pinCount;

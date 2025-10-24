@@ -28,13 +28,13 @@ public enum DeviceGateType {
 
     public static DeviceGateType ofValue(final short value) {
         return Arrays.stream(DeviceGateType.values())
-                .filter(status -> status.getValue() == value)
+                .filter(enm -> enm.getValue() == value)
                 .findFirst().orElse(DEVICE_GATE_TYPE_ERROR);
     }
 
     public static DeviceGateType ofStr(final String str) {
         return Arrays.stream(DeviceGateType.values())
-                .filter(status -> status.getStr().equals(str))
+                .filter(enm -> enm.getStr().equals(str))
                 .findFirst().orElse(DEVICE_GATE_TYPE_ERROR);
     }
 

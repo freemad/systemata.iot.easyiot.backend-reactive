@@ -21,7 +21,7 @@ services:
     hostname: eiot-core-timescaledb
     networks:
       eiot:
-        ipv4_address: 10.1.1.15
+        ipv4_address: 10.1.11.15
 
   mqtt-server:
     container_name: eiot-core-mqtt-server
@@ -40,7 +40,7 @@ services:
     hostname: eiot-mqtt-server
     networks:
       eiot:
-        ipv4_address: 10.1.1.17
+        ipv4_address: 10.1.11.17
 
 #  zookeeper:
 #    container_name: eiot-zookeeper
@@ -54,7 +54,7 @@ services:
 #    hostname: eiot-zookeeper
 #    networks:
 #      eiot:
-#        ipv4_address: 10.1.1.11
+#        ipv4_address: 10.1.11.11
 
   # --- Kafka Broker 1 ---
   kafka-1:
@@ -78,7 +78,7 @@ services:
       - ./volumes/kafka-1:/var/lib/kafka/data
     networks:
       eiot:
-        ipv4_address: 10.1.1.11
+        ipv4_address: 10.1.11.11
 
   # --- Kafka Broker 2 ---
   kafka-2:
@@ -102,7 +102,7 @@ services:
       - ./volumes/kafka-2:/var/lib/kafka/data
     networks:
       eiot:
-        ipv4_address: 10.1.1.12
+        ipv4_address: 10.1.11.12
 
   # --- Kafka Broker 3 ---
   kafka-3:
@@ -126,7 +126,7 @@ services:
       - ./volumes/kafka-3:/var/lib/kafka/data
     networks:
       eiot:
-        ipv4_address: 10.1.1.13
+        ipv4_address: 10.1.11.13
 
   kafka-ui:
     container_name: eiot-kafka-ui
@@ -145,7 +145,7 @@ services:
     hostname: eiot-kafka-ui
     networks:
       eiot:
-        ipv4_address: 10.1.1.31
+        ipv4_address: 10.1.11.31
 
 networks:
   eiot:
@@ -153,8 +153,8 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.1.1.0/24
-          gateway: 10.1.1.1
+        - subnet: 10.1.11.0/24
+          gateway: 10.1.11.1
 
   #  mongodb:
   #    image: 'mongo:latest'
@@ -186,4 +186,4 @@ networks:
 #      retries: 5
 #    networks:
 #      eiot:
-#        ipv4_address: 10.1.1.25
+#        ipv4_address: 10.1.11.25

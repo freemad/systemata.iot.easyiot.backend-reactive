@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 import systemata.iot.eiot.easyiot.common.contracts.services.IEntityRService;
 import systemata.iot.eiot.easyiot.core.domain.daos.GateTypeRepo;
 import systemata.iot.eiot.easyiot.core.domain.entities.GateTypeEntity;
+import systemata.iot.eiot.easyiot.core.domain.enums.ProtocolType;
 import systemata.iot.eiot.easyiot.core.domain.models.GateType;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class GateTypeEntityService
                 .setName(t.getName())
                 .setIsInput(t.getIsInput())
                 .setIsExtended(t.getIsExtended())
+                .setProtocolType(ProtocolType.ofValue(t.getProtocolType()))
                 .setMaxValue(t.getMaxValue())
                 .setBaseValue(t.getBaseValue())
                 .setPinCount(t.getPinCount()));
@@ -40,6 +42,7 @@ public class GateTypeEntityService
                 .setName(m.getName())
                 .setIsInput(m.getIsInput())
                 .setIsExtended(m.getIsExtended())
+                .setProtocolType(m.getProtocolType().getValue())
                 .setMaxValue(m.getMaxValue())
                 .setBaseValue(m.getBaseValue())
                 .setPinCount(m.getPinCount()));
