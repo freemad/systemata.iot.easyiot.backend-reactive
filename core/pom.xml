@@ -40,6 +40,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- JSON/Avro/Schema registry deps, metrics -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+
         <!-- Postgres R2DBC -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -74,6 +80,37 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <layers enabled="true"/>
+                    <image>
+                        <runImage>paketobuildpacks/ubuntu-noble-run-base:latest</runImage>
+                    </image>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- Compiler plugin for annotation processing -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <source>${java.version}</source>  <!-- or your Java version -->
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct-processor.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>

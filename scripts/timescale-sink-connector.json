@@ -1,0 +1,20 @@
+{
+  "name": "timescale-sink-connector",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "iot.telemetry",
+    "connection.url": "jdbc:postgresql://timescaledb_host:5432/yourdb",
+    "connection.user": "dbuser",
+    "connection.password": "dbpassword",
+    "insert.mode": "upsert",
+    "auto.evolve": "true",
+    "auto.create": "true",
+    "pk.mode": "record_key",
+    "pk.fields": "gate_id,ts",
+    "table.name.format": "public.gate_data",
+    "delete.enabled": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}

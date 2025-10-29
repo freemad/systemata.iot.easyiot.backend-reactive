@@ -2,7 +2,7 @@ package systemata.iot.eiot.easyiot.edgemqtt.resources;
 
 import lombok.extern.slf4j.Slf4j;
 import systemata.iot.eiot.easyiot.common.domain.models.MqttMessageEnvelope;
-import systemata.iot.eiot.easyiot.edgemqtt.configs.MqttProps;
+import systemata.iot.eiot.easyiot.edgemqtt.configs.EdgeMqttProps;
 import systemata.iot.eiot.easyiot.edgemqtt.services.MqttService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -19,7 +19,7 @@ import systemata.iot.eiot.easyiot.common.exceptions.CommonErrorCode;
 public class MqttController {
 
     private final MqttService mqttService;
-    private final MqttProps mqttProps;
+    private final EdgeMqttProps edgeMqttProps;
 
     // Stream MQTT as Server-Sent Events
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

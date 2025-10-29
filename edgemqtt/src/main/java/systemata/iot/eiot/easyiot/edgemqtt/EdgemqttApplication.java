@@ -1,6 +1,7 @@
 package systemata.iot.eiot.easyiot.edgemqtt;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,6 +19,11 @@ public class EdgemqttApplication {
 
     @PostConstruct
     public void init() {
+        Hooks.onOperatorDebug();
+    }
+
+    @PreDestroy
+    public void shutdown() {
         Hooks.onOperatorDebug();
     }
 }

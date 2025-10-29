@@ -7,16 +7,16 @@ import systemata.iot.eiot.easyiot.common.domain.models.Mqtt2KafkaTopicMapping;
 import java.util.List;
 
 @Data
-@ConfigurationProperties(prefix = "application.mqtt-config")
-public class MqttProps {
+@ConfigurationProperties(prefix = "application.edge-mqtt")
+public class EdgeMqttProps {
 
-    private final ConnectionProps connectionProps =  new ConnectionProps();
+    private final MqttProps mqttProps =  new MqttProps();
     private final StreamProps streamProps = new StreamProps();
     private final MqttKafkaBridge mqttKafkaBridge = new MqttKafkaBridge();
     private final WsProps wsProps = new WsProps();
 
     @Data
-    public static class ConnectionProps {
+    public static class MqttProps {
         private String broker;
         private String clientId;
         private Boolean autoReconnect;

@@ -10,9 +10,8 @@ import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.server.WebSocketService;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
-import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
 import org.springframework.web.server.WebFilter;
-import systemata.iot.eiot.easyiot.edgemqtt.services.MqttWebSocketHandler;
+import systemata.iot.eiot.easyiot.edgemqtt.services.KafkaWebSocketHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebSocketConfig {
 
-    private final MqttWebSocketHandler mqttWebSocketHandler;
+    private final KafkaWebSocketHandler kafkaWebSocketHandler;
 
     /**
      * Maps WebSocket routes to handlers.
@@ -30,7 +29,7 @@ public class WebSocketConfig {
     @Bean
     public HandlerMapping webSocketMapping() {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/ws/mqtt", mqttWebSocketHandler); // WebSocket endpoint
+        map.put("/ws/mqtt", kafkaWebSocketHandler); // WebSocket endpoint
 
         // Order must be low to ensure it's picked before WebFlux HTTP routes
         int order = -1;

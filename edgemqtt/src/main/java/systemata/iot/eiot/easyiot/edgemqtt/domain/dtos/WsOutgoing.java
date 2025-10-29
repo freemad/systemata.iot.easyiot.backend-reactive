@@ -19,7 +19,7 @@ public class WsOutgoing
     private final String type = "ws-outgoing";
     private final String version = "1";
 
-    private WsMsgType msgType = WsMsgType.WS_MSG_TYPE_MQTT_MSG;
+    private String msgType = "kafka-msg"; //WsMsgType.WS_MSG_TYPE_MQTT_MSG;
     private String topic;
     private String payload;
     private int qos;

@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
+import reactor.core.scheduler.Schedulers;
 import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderRecord;
@@ -37,7 +39,12 @@ public class KafkaClusterSubscriptionService {
      * Subscribe to topic -> Flux<WsOutgoing>
      */
     public Flux<WsOutgoing> subscribe(String topic) {
-        return topicSinks.computeIfAbsent(topic, this::createTopicSink).asFlux();
+        return topicSinks
+                .computeIfAbsent(topic, this::createTopicSink)
+                .asFlux()
+                .subscribeOn(Schedulers.boundedElastic())
+                .doOnSubscribe(sub -> log.info("webSocket client subscribed to kafka topic {}", topic))
+                .doFinally(sig -> log.debug("webSocket stream for topic {} finished with {}", topic, sig));
     }
 
     /**
@@ -46,16 +53,16 @@ public class KafkaClusterSubscriptionService {
     public Flux<SenderResult<Void>> publish(WsOutgoing outgoing) {
         SenderRecord<String, String, Void> record = SenderRecord.create(
                 outgoing.getTopic(),
-                null,
-                null,
-                outgoing.getTopic(),
-                outgoing.getPayload(),
-                null
+                null,  // partition
+                null,  // timestamp
+                outgoing.getTopic(), // key
+                outgoing.getPayload(), // value
+                null   // correlation metadata
         );
 
         return sender.send(Flux.just(record))
-                .doOnNext(r -> log.debug("Kafka published: {}", outgoing))
-                .doOnError(e -> log.error("Kafka publish failed: {}", e.getMessage()));
+                .doOnNext(r -> log.debug("kafka published: {}", outgoing))
+                .doOnError(e -> log.error("kafka publish failed: {}", e.getMessage(), e));
     }
 
     private Sinks.Many<WsOutgoing> createTopicSink(String topic) {
@@ -76,25 +83,29 @@ public class KafkaClusterSubscriptionService {
     }
 
     private Flux<WsOutgoing> createTopicFlux(String topic) {
-        log.info("Subscribing KafkaReceiver to topic {}", topic);
+        log.info("Subscribing KafkaReceiver (manual ack) to topic {}", topic);
 
         return receiver
-                .receiveAutoAck()
-                .flatMap(batchFlux -> batchFlux)
-                .filter(r -> r.topic().equals(topic))
-                .map(r -> new WsOutgoing(
-                        WsMsgType.WS_MSG_TYPE_KAFKA_MSG,
-                        r.topic(),
-                        r.value(),
-                        1,
-                        false,
-                        Instant.now()
-                ))
-                .doOnNext(msg -> log.debug("Kafka consumed from {} -> {}", topic, msg))
-                .doOnError(e -> log.error("Kafka consumption error for {}: {}", topic, e.getMessage()));
+                .receive() // Flux<ReceiverRecord<K,V>>
+                .filter(record -> record.topic().equals(topic))
+                .map(record -> {
+                    record.receiverOffset().acknowledge();
+                    return new WsOutgoing(
+                            "kafka-msg", //WsMsgType.WS_MSG_TYPE_KAFKA_MSG,
+                            record.topic(),
+                            record.value(),
+                            1,
+                            false,
+                            Instant.now()
+                    );
+                })
+                .doOnNext(msg -> log.debug("kafka consumed from {} -> {}", topic, msg))
+                .doOnError(e -> log.error("kafka consumption error for {}: {}", topic, e.getMessage()))
+                .doFinally(sig -> log.info("kafka flux for {} completed: {}", topic, sig));
     }
 
     public void cleanup() {
+        log.info("cleaning up kafkaClusterSubscriptionService...");
         topicSubscriptions.values().forEach(Disposable::dispose);
         topicSubscriptions.clear();
         topicSinks.clear();

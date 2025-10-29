@@ -10,8 +10,8 @@ spring:
     client-id: ${spring.application.name}-${spring.application.instance_id:${random.uuid}}
 
 application:
-  mqtt-config:
-    connection-props:
+  edge-mqtt:
+    mqtt-props:
       broker: ${MQTT_BROKER_URL:tcp://localhost:1883}
       client-id: ${MQTT_CLIENT_ID:eiot-client}
       default-qos: ${MQTT_DEFAULT_QOS:1}

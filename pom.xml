@@ -39,7 +39,8 @@
     <properties>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <java.version>21</java.version>
-        <mapstruct-version>1.4.2.Final</mapstruct-version>
+        <mapstruct-version>1.5.5.Final</mapstruct-version>
+        <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
         <lombok-mapstruct-binding-version>0.2.0</lombok-mapstruct-binding-version>
         <kafka-avro.version>8.0.0</kafka-avro.version>
         <apache-avro.version>1.12.0</apache-avro.version>
@@ -55,6 +56,7 @@
         <spring-boot-starter.version>3.5.6</spring-boot-starter.version>
 
         <wang-harlon-quickjs-wrapper-java.version>3.2.3</wang-harlon-quickjs-wrapper-java.version>
+        <jackson-dataformat-yaml.version>2.20.0</jackson-dataformat-yaml.version>
     </properties>
 
     <dependencies>
@@ -114,7 +116,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-        <!-- Optional: JSON/Avro/Schema registry deps, metrics -->
+        <!-- JSON/Avro/Schema registry deps, metrics -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${jackson-dataformat-yaml.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>

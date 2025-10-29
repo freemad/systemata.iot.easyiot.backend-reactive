@@ -128,6 +128,35 @@ services:
       eiot:
         ipv4_address: 10.1.11.13
 
+  # --- Kafka Connect ---
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:8.1.0
+    container_name: eiot-kafka-connect
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - timescaledb
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect  # or container hostname
+      CONNECT_BOOTSTRAP_SERVERS: "eiot-kafka-1:9092,eiot-kafka-2:9092,eiot-kafka-3:9092"
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "eiot-connect-cluster"
+      CONNECT_CONFIG_STORAGE_TOPIC: "eiot-connect-configs"
+      CONNECT_OFFSET_STORAGE_TOPIC: "eiot-connect-offsets"
+      CONNECT_STATUS_STORAGE_TOPIC: "eiot-connect-status"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
+    volumes:
+      - ./volumes/connectors:/etc/kafka-connect/jars
+    networks:
+      eiot:
+        ipv4_address: 10.1.11.14
+
   kafka-ui:
     container_name: eiot-kafka-ui
     image: "provectuslabs/kafka-ui:v0.7.2"
@@ -135,6 +164,7 @@ services:
       - kafka-1
       - kafka-2
       - kafka-3
+      - timescaledb
     ports:
       - "7777:8080"
     restart: always

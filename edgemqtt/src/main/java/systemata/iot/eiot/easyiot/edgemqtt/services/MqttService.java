@@ -14,7 +14,7 @@ import reactor.core.scheduler.Schedulers;
 import systemata.iot.eiot.easyiot.common.domain.models.MqttMessageEnvelope;
 import systemata.iot.eiot.easyiot.common.exceptions.BusinessException;
 import systemata.iot.eiot.easyiot.common.exceptions.CommonErrorCode;
-import systemata.iot.eiot.easyiot.edgemqtt.configs.MqttProps;
+import systemata.iot.eiot.easyiot.edgemqtt.configs.EdgeMqttProps;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class MqttService {
 
-    private final MqttProps mqttProps;
+    private final EdgeMqttProps edgeMqttProps;
 
     private MqttAsyncClient client;
     private MqttConnectOptions options;
@@ -47,14 +47,14 @@ public class MqttService {
     public void init() throws MqttException {
         options = new MqttConnectOptions();
         options.setMqttVersion(MqttConnectOptions.MQTT_VERSION_3_1_1);
-        options.setCleanSession(mqttProps.getConnectionProps().getCleanSession());
-        options.setAutomaticReconnect(mqttProps.getConnectionProps().getAutoReconnect());
-        options.setKeepAliveInterval(mqttProps.getConnectionProps().getKeepAliveInterval());
-        options.setConnectionTimeout(mqttProps.getConnectionProps().getConnectionTimeout());
+        options.setCleanSession(edgeMqttProps.getMqttProps().getCleanSession());
+        options.setAutomaticReconnect(edgeMqttProps.getMqttProps().getAutoReconnect());
+        options.setKeepAliveInterval(edgeMqttProps.getMqttProps().getKeepAliveInterval());
+        options.setConnectionTimeout(edgeMqttProps.getMqttProps().getConnectionTimeout());
 
         client = new MqttAsyncClient(
-                mqttProps.getConnectionProps().getBroker(),
-                mqttProps.getConnectionProps().getClientId(),
+                edgeMqttProps.getMqttProps().getBroker(),
+                edgeMqttProps.getMqttProps().getClientId(),
                 new MemoryPersistence()
         );
 
@@ -124,13 +124,13 @@ public class MqttService {
     public Flux<MqttMessageEnvelope> subscribe(String topic) throws MqttException {
         Sinks.Many<MqttMessageEnvelope> sink = createOrReuseSink(topic);
         if (subscribedTopics.add(topic)) {
-            client.subscribe(topic, mqttProps.getConnectionProps().getDefaultQos());
+            client.subscribe(topic, edgeMqttProps.getMqttProps().getDefaultQos());
             log.info("subscribed to MQTT topic {}", topic);
         }
         return sink.asFlux()
                 .publishOn(Schedulers.boundedElastic())
                 .doOnCancel(() -> cleanupSink(topic))
-                .timeout(Duration.ofMinutes(mqttProps.getStreamProps().getTimeoutInMin()))
+                .timeout(Duration.ofMinutes(edgeMqttProps.getStreamProps().getTimeoutInMin()))
                 .onErrorResume(e -> {
                     log.debug("sse stream error for topic {}: {}", topic, e.getMessage());
                     cleanupSink(topic);
@@ -154,8 +154,8 @@ public class MqttService {
             return Sinks.many()
                     .multicast()
                     .onBackpressureBuffer(
-                            mqttProps.getStreamProps().getBufferSize(),
-                            mqttProps.getStreamProps().getAutoCancel()
+                            edgeMqttProps.getStreamProps().getBufferSize(),
+                            edgeMqttProps.getStreamProps().getAutoCancel()
                     );
         });
     }
@@ -170,7 +170,7 @@ public class MqttService {
     private void resubscribeAll() {
         subscribedTopics.forEach(t -> {
             try {
-                client.subscribe(t, mqttProps.getConnectionProps().getDefaultQos());
+                client.subscribe(t, edgeMqttProps.getMqttProps().getDefaultQos());
                 log.info("resubscribed to {}", t);
             } catch (MqttException e) {
                 log.error("failed to resubscribe {}", t, e);
