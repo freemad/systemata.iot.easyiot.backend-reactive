@@ -13,17 +13,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table(name = "owner")
-public class OwnerEntity
+@Table(name = "tenant")
+public class TenantEntity
         implements IUuidEntity {
     @Serial
-    private static final long serialVersionUID = 3559096304111319849L;
+    private static final long serialVersionUID = -196378497812557278L;
 
     @Id
     private UUID id;
-    private String firstName;
-    private String lastName;
-    private Long dateOfBirth;
-    private Byte gender;
-    private UUID tenantId;
+    private String name;
+    private String description;
 }

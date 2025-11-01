@@ -1,9 +1,9 @@
-name: timescale-sink-connector
+name: timescaledb-sink-connector
 config:
   connector.class: io.confluent.connect.jdbc.JdbcSinkConnector
   tasks.max: 1
-  topics: iot.telemetry
-  connection.url: jdbc:postgresql://10.1.11.15:5432/eiot_core_db
+  topics: iot.telemetry,iot.command,iot.control
+  connection.url: ${KAFKACONNECT_TIMESCALEDB_JDBC_CONNECTION_URL:jdbc:postgresql://10.1.11.15:5432/eiot_core_db}
   connection.user: postgres
   connection.password: postgres
   insert.mode: upsert

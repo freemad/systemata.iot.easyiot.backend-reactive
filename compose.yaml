@@ -42,23 +42,9 @@ services:
       eiot:
         ipv4_address: 10.1.11.17
 
-#  zookeeper:
-#    container_name: eiot-zookeeper
-#    image: "confluentinc/cp-zookeeper:7.4.10"
-#    environment:
-#      ZOOKEEPER_SERVER_ID: 1
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#      ZOOKEEPER_TICK_TIME: 2000
-#      ZOOKEEPER_SERVERS: zookeeper:2888:3888
-#      ALLOW_ANONYMOUS_LOGIN: yes
-#    hostname: eiot-zookeeper
-#    networks:
-#      eiot:
-#        ipv4_address: 10.1.11.11
-
   # --- Kafka Broker 1 ---
   kafka-1:
-    image: apache/kafka:4.1.0
+    image: apache/kafka:4.1.0-rc1
     container_name: eiot-kafka-1
     hostname: eiot-kafka-1
     ports:
@@ -82,7 +68,7 @@ services:
 
   # --- Kafka Broker 2 ---
   kafka-2:
-    image: apache/kafka:4.1.0
+    image: apache/kafka:4.1.0-rc1
     container_name: eiot-kafka-2
     hostname: eiot-kafka-2
     ports:
@@ -106,7 +92,7 @@ services:
 
   # --- Kafka Broker 3 ---
   kafka-3:
-    image: apache/kafka:4.1.0
+    image: apache/kafka:4.1.0-rc1
     container_name: eiot-kafka-3
     hostname: eiot-kafka-3
     ports:
@@ -140,8 +126,8 @@ services:
     ports:
       - "8083:8083"
     environment:
-      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect  # or container hostname
-      CONNECT_BOOTSTRAP_SERVERS: "eiot-kafka-1:9092,eiot-kafka-2:9092,eiot-kafka-3:9092"
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_BOOTSTRAP_SERVERS: "eiot-kafka-1:19092,eiot-kafka-2:19094,eiot-kafka-3:19096"
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: "eiot-connect-cluster"
       CONNECT_CONFIG_STORAGE_TOPIC: "eiot-connect-configs"
@@ -151,6 +137,9 @@ services:
       CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
       CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
+      # Optional for easier debugging
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN"
     volumes:
       - ./volumes/connectors:/etc/kafka-connect/jars
     networks:

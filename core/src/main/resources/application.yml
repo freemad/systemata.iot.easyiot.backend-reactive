@@ -36,8 +36,8 @@ spring:
 application:
   core:
     kafka-connect-props:
-      register-config-path: connectors/timescale-sink-connector.yml
-      connect-url: http://kafka-connect:8083/connectors
+      register-config-path: connectors/timescaledb-sink-connector.yml
+      connect-url: http://localhost:8083/connectors
 
 #  common:
 #    kafka-config:

@@ -29,7 +29,7 @@ public class WebSocketConfig {
     @Bean
     public HandlerMapping webSocketMapping() {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/ws/mqtt", kafkaWebSocketHandler); // WebSocket endpoint
+        map.put("/api/v1/ws/mqtt", kafkaWebSocketHandler); // WebSocket endpoint
 
         // Order must be low to ensure it's picked before WebFlux HTTP routes
         int order = -1;

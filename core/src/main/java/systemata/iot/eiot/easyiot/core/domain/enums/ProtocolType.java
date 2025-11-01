@@ -16,7 +16,8 @@ public enum ProtocolType
     PROTOCOL_TYPE_UNSPECIFIED((byte) 0, "unspecified"),
     PROTOCOL_TYPE_DIRECT((byte) 1, "direct"),
     PROTOCOL_TYPE_WIRELESS_LORA((byte) 2, "wireless-lora"),
-    PROTOCOL_TYPE_ERROR((byte) 127, "error");
+    PROTOCOL_TYPE_MQTT((byte) 10, "mqtt"),
+    PROTOCOL_TYPE_ERROR((byte) 255, "error");
 
     private final Byte value;
     private final String str;
