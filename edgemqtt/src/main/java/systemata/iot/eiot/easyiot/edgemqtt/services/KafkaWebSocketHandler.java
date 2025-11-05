@@ -13,11 +13,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import systemata.iot.eiot.easyiot.edgemqtt.contracts.domain.dtos.IWsIncoming;
-import systemata.iot.eiot.easyiot.edgemqtt.domain.dtos.WsOutgoing;
+import systemata.iot.eiot.easyiot.edgemqtt.domain.dtos.DeviceEvent;
 import systemata.iot.eiot.easyiot.edgemqtt.domain.dtos.WsPublish;
 import systemata.iot.eiot.easyiot.edgemqtt.domain.dtos.WsSubscribe;
 import systemata.iot.eiot.easyiot.edgemqtt.domain.dtos.WsUnsubscribe;
-import systemata.iot.eiot.easyiot.edgemqtt.domain.enums.WsMsgType;
 
 import java.time.Instant;
 import java.util.Map;
@@ -120,7 +119,7 @@ public class KafkaWebSocketHandler
     private Mono<Void> doPublish(WsPublish publish) {
         log.debug("publishing to kafka topic {}: {}", publish.getTopic(), publish.getPayload());
 
-        WsOutgoing outgoing = new WsOutgoing(
+        DeviceEvent outgoing = new DeviceEvent(
                 "kafka-msg", //WsMsgType.WS_MSG_TYPE_KAFKA_MSG,
                 publish.getTopic(),
                 publish.getPayload(),
@@ -149,7 +148,7 @@ public class KafkaWebSocketHandler
     /**
      * Helper: serialize to JSON string
      */
-    private String serializeToText(WsOutgoing outgoing) {
+    private String serializeToText(DeviceEvent outgoing) {
         try {
             return objectMapper.writeValueAsString(outgoing);
         } catch (Exception e) {

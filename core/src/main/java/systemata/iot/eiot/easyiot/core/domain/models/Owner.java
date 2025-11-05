@@ -3,7 +3,7 @@ package systemata.iot.eiot.easyiot.core.domain.models;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IEntityModel;
-import systemata.iot.eiot.easyiot.core.domain.enums.PersonGender;
+import systemata.iot.eiot.easyiot.common.domain.enums.PersonGender;
 
 import java.io.Serial;
 import java.util.Date;

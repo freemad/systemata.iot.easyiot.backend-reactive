@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IUuidEntity;
+import systemata.iot.eiot.easyiot.common.domain.enums.ProtocolType;
 
 import java.io.Serial;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -23,9 +26,13 @@ public class GateTypeEntity
     private UUID id;
     private String name;
     private Boolean isInput;
-    private Boolean isExtended;
-    private Byte protocolType;
+    private Short protocolType;
     private Double maxValue;
     private Double baseValue;
     private Short pinCount;
+
+    @Transient
+    public Boolean getIsExtended() {
+        return !Objects.equals(protocolType, ProtocolType.PROTOCOL_TYPE_ONBOARD.getValue());
+    }
 }

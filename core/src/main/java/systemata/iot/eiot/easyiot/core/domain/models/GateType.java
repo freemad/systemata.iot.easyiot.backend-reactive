@@ -3,7 +3,7 @@ package systemata.iot.eiot.easyiot.core.domain.models;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IEntityModel;
-import systemata.iot.eiot.easyiot.core.domain.enums.ProtocolType;
+import systemata.iot.eiot.easyiot.common.domain.enums.ProtocolType;
 
 import java.io.Serial;
 import java.util.UUID;

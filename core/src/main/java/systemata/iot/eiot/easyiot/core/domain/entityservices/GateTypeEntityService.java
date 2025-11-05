@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import systemata.iot.eiot.easyiot.common.contracts.services.IEntityRService;
 import systemata.iot.eiot.easyiot.core.domain.daos.GateTypeRepo;
 import systemata.iot.eiot.easyiot.core.domain.entities.GateTypeEntity;
-import systemata.iot.eiot.easyiot.core.domain.enums.ProtocolType;
+import systemata.iot.eiot.easyiot.common.domain.enums.ProtocolType;
 import systemata.iot.eiot.easyiot.core.domain.models.GateType;
 
 import java.util.UUID;

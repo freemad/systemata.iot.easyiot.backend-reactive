@@ -10,8 +10,8 @@ config:
   auto.create: true
   auto.evolve: true
   pk.mode: record_key
-  pk.fields: device_id, ts
-  table.name.format: gate_data
+  pk.fields: related_id, data_type, ts
+  table.name.format: device_data
   delete.enabled: false
   value.converter: org.apache.kafka.connect.json.JsonConverter
   value.converter.schemas.enable: false

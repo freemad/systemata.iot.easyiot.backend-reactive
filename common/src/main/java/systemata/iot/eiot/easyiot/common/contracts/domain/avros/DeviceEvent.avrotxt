@@ -1,0 +1,11 @@
+{
+  "namespace": "io.eiot.schema",
+  "type": "record",
+  "name": "DeviceEvent",
+  "fields": [
+    {"name": "deviceId", "type": "string"},
+    {"name": "ts", "type": "long"},
+    {"name": "eventType", "type": "string"},
+    {"name": "payload", "type": {"type": "map", "values": "string"}}
+  ]
+}

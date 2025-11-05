@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.boot.jackson.JsonComponent;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IDto;
-import systemata.iot.eiot.easyiot.core.domain.enums.PersonGender;
+import systemata.iot.eiot.easyiot.common.domain.enums.PersonGender;
 
 import java.io.Serial;
 import java.time.Instant;

@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import systemata.iot.eiot.easyiot.common.contracts.services.IEntityRService;
 import systemata.iot.eiot.easyiot.core.domain.daos.GateDataRepo;
-import systemata.iot.eiot.easyiot.core.domain.entities.GateDataEntity;
+import systemata.iot.eiot.easyiot.core.domain.entities.DeviceDataEntity;
 import systemata.iot.eiot.easyiot.core.domain.models.GateData;
 
 import java.time.Instant;
@@ -20,26 +20,26 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 public class GateDataEntityService
-        implements IEntityRService<GateData, GateDataEntity, String> {
+        implements IEntityRService<GateData, DeviceDataEntity, String> {
     private final Logger logger = LoggerFactory.getLogger(GateDataEntityService.class);
 
     private final GateDataRepo repository;
     private final GateEntityService gateEntityService;
 
-    public Function<GateDataEntity, Mono<GateData>> getMonoModelMapper() {
+    public Function<DeviceDataEntity, Mono<GateData>> getMonoModelMapper() {
         return t -> Mono.just(new GateData()
                 .setId(t.getId())
                 .setTs(t.getTs())
                 .setValue(t.getValue()))
-                .flatMap(m -> gateEntityService.findById(t.getGateId())
+                .flatMap(m -> gateEntityService.findById(t.getRelatedId())
                         .map(m::setGate));
     }
 
-    public Function<GateData, Mono<GateDataEntity>> getMonoEntityMapper() {
-        return m -> Mono.just(new GateDataEntity()
+    public Function<GateData, Mono<DeviceDataEntity>> getMonoEntityMapper() {
+        return m -> Mono.just(new DeviceDataEntity()
                 .setId(m.getId())
                 .setTs(m.getTs())
-                .setGateId(m.getGate().getId())
+                .setRelatedId(m.getGate().getId())
                 .setValue(m.getValue()));
     }
 

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.boot.jackson.JsonComponent;
 import systemata.iot.eiot.easyiot.common.contracts.domain.IDto;
-import systemata.iot.eiot.easyiot.core.domain.enums.ProtocolType;
+import systemata.iot.eiot.easyiot.common.domain.enums.ProtocolType;
 
 import java.io.Serial;
 import java.util.UUID;

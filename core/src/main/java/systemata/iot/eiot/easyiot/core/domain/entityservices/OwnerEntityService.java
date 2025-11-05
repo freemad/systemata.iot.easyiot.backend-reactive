@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import systemata.iot.eiot.easyiot.common.contracts.services.IEntityRService;
 import systemata.iot.eiot.easyiot.core.domain.daos.OwnerRepo;
 import systemata.iot.eiot.easyiot.core.domain.entities.OwnerEntity;
-import systemata.iot.eiot.easyiot.core.domain.enums.PersonGender;
+import systemata.iot.eiot.easyiot.common.domain.enums.PersonGender;
 import systemata.iot.eiot.easyiot.core.domain.models.Owner;
 
 import java.util.Date;
